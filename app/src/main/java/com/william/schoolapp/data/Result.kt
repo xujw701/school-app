@@ -1,4 +1,4 @@
-package com.william.schoolapp.data.model
+package com.william.schoolapp.data
 
 /**
  * [Result] is a type that represents either success ([Ok]) or failure ([Err]).

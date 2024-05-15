@@ -15,5 +15,5 @@ data class SearchResult(
     @SerializedName("offset")
     val offset: Int,
     @SerializedName("records")
-    val records: List<Record>,
+    val schoolRecord: List<SchoolRecord>,
 )

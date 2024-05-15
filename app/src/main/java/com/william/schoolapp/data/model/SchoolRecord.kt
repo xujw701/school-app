@@ -2,7 +2,7 @@ package com.william.schoolapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Record(
+data class SchoolRecord(
     @SerializedName("School_Id")
     val schoolId: String,
     @SerializedName("Org_Name")

@@ -1,8 +1,5 @@
 package com.william.schoolapp.data
 
-import com.william.schoolapp.data.model.Err
-import com.william.schoolapp.data.model.Ok
-import com.william.schoolapp.data.model.Result
 import retrofit2.Response
 
 suspend fun <T> safeApi(apiCall: suspend () -> T): Result<T, Throwable> =

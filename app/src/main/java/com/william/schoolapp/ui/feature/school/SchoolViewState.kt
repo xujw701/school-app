@@ -1,6 +1,6 @@
 package com.william.schoolapp.ui.feature.school
-import com.william.schoolapp.data.model.Record
+import com.william.schoolapp.data.model.SchoolRecord
 
 data class SchoolViewState(
-    val schoolList: List<Record> = listOf()
+    val schoolList: List<SchoolRecord> = listOf()
 )
