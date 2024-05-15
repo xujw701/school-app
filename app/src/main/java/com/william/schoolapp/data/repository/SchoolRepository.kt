@@ -8,8 +8,8 @@ import javax.inject.Inject
 interface SchoolRepository {
 
     suspend fun getSchools(
-        limit: Int,
-        offset: Int,
+        limit: Int = 20,
+        offset: Int = 0,
     ): List<Record>
 }
 
