@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
+import kotlinx.coroutines.delay
 
 @Composable
 fun SchoolScreenRoute(navController: NavHostController) {
@@ -51,9 +53,15 @@ fun SchoolScreenRoute(navController: NavHostController) {
 fun SchoolScreen(
     viewState: SchoolViewState,
     loadMore: () -> Unit,
-    refresh: () -> Unit) {
+    refresh: suspend () -> Unit) {
     val pullRefreshState = rememberPullToRefreshState()
-
+    if (pullRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            delay(500) // Make it a bit longer
+            refresh()
+            pullRefreshState.endRefresh()
+        }
+    }
     Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
         Column(Modifier.fillMaxSize()) {
             if (!pullRefreshState.isRefreshing) {

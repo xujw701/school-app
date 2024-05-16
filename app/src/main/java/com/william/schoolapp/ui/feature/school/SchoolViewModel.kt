@@ -32,12 +32,8 @@ internal class SchoolViewModel @Inject constructor(
         }
     }
 
-    fun refresh() {
-        view.state.update { it.copy(refreshing = true) }
-        viewModelScope.launch {
-            fetchSchools()
-            view.state.update { it.copy(refreshing = false) }
-        }
+    suspend fun refresh() {
+        fetchSchools()
     }
 
     fun loadMore() {

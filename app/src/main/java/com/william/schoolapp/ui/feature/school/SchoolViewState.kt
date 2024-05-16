@@ -6,7 +6,6 @@ data class SchoolViewState(
     val state: State = State.LOADING,
     val schools: List<SchoolUio> = emptyList(),
     val loadMore: LoadMore = LoadMore.HIDE,
-    val refreshing: Boolean = false,
 )  {
     enum class State { LOADING, ERROR, SUCCESS, EMPTY }
     enum class LoadMore { LOAD_MORE, LOADING, HIDE, LOAD_ERROR }
