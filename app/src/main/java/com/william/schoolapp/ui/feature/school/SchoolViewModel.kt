@@ -8,6 +8,7 @@ import com.william.schoolapp.data.repository.SchoolRepository
 import com.william.schoolapp.ui.feature.school.SchoolViewState.LoadMoreState
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -34,12 +35,16 @@ internal class SchoolViewModel @Inject constructor(
     }
 
     suspend fun refresh() {
+        // Make it a bit longer
+        delay(500)
         fetchSchools()
     }
 
     fun loadMore() {
         view.state.update { it.copy(loadMoreState = LoadMoreState.LOADING) }
         viewModelScope.launch {
+            // Make it a bit longer
+            delay(1000)
             schoolRepository.getSchools(
                 offset = schools.size,
             ).fold(

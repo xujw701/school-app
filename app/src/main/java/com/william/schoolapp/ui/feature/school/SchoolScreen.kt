@@ -64,7 +64,6 @@ fun SchoolScreen(
     val pullRefreshState = rememberPullToRefreshState()
     if (pullRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            delay(500) // Make it a bit longer
             refresh()
             pullRefreshState.endRefresh()
         }
