@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.william.schoolapp.data.fold
 import com.william.schoolapp.data.model.SchoolRecord
 import com.william.schoolapp.data.repository.SchoolRepository
+import com.william.schoolapp.ui.feature.school.SchoolViewState.LoadMoreState
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,7 @@ internal class SchoolViewModel @Inject constructor(
     }
 
     fun loadMore() {
-        view.state.update { it.copy(loadMore = SchoolViewState.LoadMore.LOADING) }
+        view.state.update { it.copy(loadMoreState = LoadMoreState.LOADING) }
         viewModelScope.launch {
             schoolRepository.getSchools(
                 offset = schools.size,
@@ -47,12 +48,12 @@ internal class SchoolViewModel @Inject constructor(
                     view.state.update { currentState ->
                         currentState.copy(
                             schools = mapSchoolData(schools),
-                            loadMore = handleLoadMore(schools.count() < result.data.total)
+                            loadMoreState = handleLoadMore(schools.count() < result.data.total)
                         )
                     }
                 },
                 failure = {
-                    view.state.update { currentState -> currentState.copy(loadMore = SchoolViewState.LoadMore.LOAD_ERROR) }
+                    view.state.update { currentState -> currentState.copy(loadMoreState = LoadMoreState.LOAD_ERROR) }
                 }
             )
         }
@@ -71,7 +72,7 @@ internal class SchoolViewModel @Inject constructor(
                         currentState.copy(
                             state = State.SUCCESS,
                             schools = mapSchoolData(schools),
-                            loadMore = handleLoadMore(schools.count() < result.data.total)
+                            loadMoreState = handleLoadMore(schools.count() < result.data.total)
                         )
                     }
                 }
@@ -82,6 +83,6 @@ internal class SchoolViewModel @Inject constructor(
         )
     }
 
-    private fun handleLoadMore(hasMore: Boolean) = if (hasMore) SchoolViewState.LoadMore.LOAD_MORE else SchoolViewState.LoadMore.HIDE
+    private fun handleLoadMore(hasMore: Boolean) = if (hasMore) LoadMoreState.SHOW else LoadMoreState.HIDE
 
 }

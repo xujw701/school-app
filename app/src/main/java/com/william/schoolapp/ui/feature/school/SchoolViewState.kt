@@ -5,10 +5,10 @@ import com.william.schoolapp.ui.utils.SchoolImagesProvider
 data class SchoolViewState(
     val state: State = State.LOADING,
     val schools: List<SchoolUio> = emptyList(),
-    val loadMore: LoadMore = LoadMore.HIDE,
+    val loadMoreState: LoadMoreState = LoadMoreState.HIDE,
 )  {
     enum class State { LOADING, ERROR, SUCCESS, EMPTY }
-    enum class LoadMore { LOAD_MORE, LOADING, HIDE, LOAD_ERROR }
+    enum class LoadMoreState { SHOW, LOADING, HIDE, LOAD_ERROR }
 }
 
 data class SchoolUio(
