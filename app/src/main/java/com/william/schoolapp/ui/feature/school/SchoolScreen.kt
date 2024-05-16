@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.william.schoolapp.R
 import com.william.schoolapp.ui.feature.school.SchoolViewState.LoadMoreState
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import com.william.schoolapp.ui.shared.LoadingIndicator
@@ -40,8 +41,6 @@ import com.william.schoolapp.ui.theme.XSmallPadding
 import com.william.schoolapp.ui.theme.XXSmallPadding
 import com.william.schoolapp.ui.theme.schoolImageHeight
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
-import com.william.schoolapp.R
-import kotlinx.coroutines.delay
 
 @Composable
 fun SchoolScreenRoute(navController: NavHostController) {
