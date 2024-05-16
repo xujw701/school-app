@@ -70,12 +70,10 @@ fun SchoolScreen(
                 .padding(vertical = 16.dp)
                 .background(Color.White)
         ) {
-            if (!pullRefreshState.isRefreshing) {
-                SchoolListView(
-                    viewState = viewState,
-                    loadMore = loadMore,
-                )
-            }
+            SchoolListView(
+                viewState = viewState,
+                loadMore = loadMore,
+            )
         }
         PullToRefreshContainer(
             modifier = Modifier.align(Alignment.TopCenter),
