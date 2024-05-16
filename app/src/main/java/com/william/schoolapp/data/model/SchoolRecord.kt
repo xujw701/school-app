@@ -17,4 +17,10 @@ data class SchoolRecord(
     val orgType: String,
     @SerializedName("Status")
     val status: String,
+    @SerializedName("Add1_Line1")
+    val line1: String,
+    @SerializedName("Add1_Suburb")
+    val suburb: String,
+    @SerializedName("Add1_City")
+    val city: String,
 )

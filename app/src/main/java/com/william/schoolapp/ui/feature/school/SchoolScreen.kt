@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,7 +64,12 @@ fun SchoolScreen(
         }
     }
     Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
-        Column(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 16.dp)
+                .background(Color.White)
+        ) {
             if (!pullRefreshState.isRefreshing) {
                 SchoolListView(
                     viewState = viewState,
@@ -174,9 +178,16 @@ fun SchoolCard(school: SchoolUio) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = school.address,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Status: ${school.status}")
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = school.telephone)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = school.email)
         }
     }
 }
@@ -196,12 +207,18 @@ private val mockSchools = listOf(
         "Sample School 1",
         "Open",
         "1234567890",
+        "school@school.com",
+        "http://school1.org",
+        "7 New town, Auckland",
         "http://school2.org",
     ),
     SchoolUio(
         "Sample School 2",
         "Open",
         "0987654321",
+        "school@school.com",
+        "http://school2.org",
+        "7 New town, Auckland",
         "http://school2.org",
     ),
     // Add more sample records if needed

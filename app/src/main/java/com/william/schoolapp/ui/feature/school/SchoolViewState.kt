@@ -15,6 +15,9 @@ data class SchoolUio(
     val name: String,
     val status: String,
     val telephone: String,
+    val email: String,
+    val website: String,
+    val address: String,
     val imageUrl: String,
 )
 
@@ -22,7 +25,11 @@ fun SchoolRecord.toUio() = SchoolUio(
     name = orgName,
     status = status,
     telephone = telephone,
+    email = email,
+    website = url,
+    address = "${line1.trim()}${if (suburb.isNotEmpty()) ", ${suburb.trim()}" else ""}, ${city.trim()}",
     imageUrl = SchoolImagesProvider.getUrl(),
 )
 
 fun mapSchoolData(schoolRecord: List<SchoolRecord>) = schoolRecord.map { it.toUio() }
+
