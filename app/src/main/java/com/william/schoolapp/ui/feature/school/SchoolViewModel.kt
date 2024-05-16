@@ -50,7 +50,7 @@ internal class SchoolViewModel @Inject constructor(
                     schools = schools.plus(result.data.schoolRecord)
                     view.state.update { currentState ->
                         currentState.copy(
-                            schools = schools,
+                            schools = mapSchoolData(schools),
                             loadMore = handleLoadMore(schools.count() < result.data.total)
                         )
                     }
@@ -74,7 +74,7 @@ internal class SchoolViewModel @Inject constructor(
                     } else {
                         currentState.copy(
                             state = State.SUCCESS,
-                            schools = schools,
+                            schools = mapSchoolData(schools),
                             loadMore = handleLoadMore(schools.count() < result.data.total)
                         )
                     }

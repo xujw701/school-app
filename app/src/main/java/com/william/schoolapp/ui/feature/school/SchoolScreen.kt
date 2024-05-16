@@ -1,6 +1,5 @@
 package com.william.schoolapp.ui.feature.school
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,15 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.william.schoolapp.R
-import com.william.schoolapp.data.model.SchoolRecord
+import coil.compose.AsyncImage
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
 
@@ -107,7 +104,7 @@ fun SchoolListView(
 }
 
 @Composable
-fun SchoolCard(school: SchoolRecord) {
+fun SchoolCard(school: SchoolUio) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,17 +117,17 @@ fun SchoolCard(school: SchoolRecord) {
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-            Image(
-                modifier = Modifier
+            AsyncImage(
+                    modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp),
-                painter = painterResource(id = getSchoolImage(school.schoolId)),
+                model = school.imageUrl,
                 contentScale = ContentScale.Crop,
-                contentDescription = "",
+                contentDescription = null,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = school.orgName,
+                text = school.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -152,33 +149,18 @@ fun LoadingIndicator() {
     }
 }
 
-private fun getSchoolImage(schoolId: Int): Int {
-    return when (schoolId % 5) {
-        1 -> R.drawable.school1
-        2 -> R.drawable.school2
-        3 -> R.drawable.school3
-        else -> R.drawable.school4
-    }
-}
-
 private val mockSchools = listOf(
-    SchoolRecord(
-        1,
+    SchoolUio(
         "Sample School 1",
+        "Open",
         "1234567890",
-        "email1@school.org",
-        "http://school1.org",
-        "Public",
-        "Active"
-    ),
-    SchoolRecord(
-        2,
-        "Sample School 2",
-        "0987654321",
-        "email2@school.org",
         "http://school2.org",
-        "Private",
-        "Active"
+    ),
+    SchoolUio(
+        "Sample School 2",
+        "Open",
+        "0987654321",
+        "http://school2.org",
     ),
     // Add more sample records if needed
 )
