@@ -2,7 +2,10 @@ package com.william.schoolapp.ui.feature.school
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.william.schoolapp.data.fold
+import com.william.schoolapp.data.model.SchoolRecord
 import com.william.schoolapp.data.repository.SchoolRepository
+import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,19 +19,73 @@ internal class SchoolViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val view = object {
-        val state = MutableStateFlow<SchoolViewState>(SchoolViewState())
+        val state = MutableStateFlow(SchoolViewState())
     }
 
     val viewState: StateFlow<SchoolViewState> = view.state
 
-    init {
-        loadSchoolList()
-    }
+    private var schools: List<SchoolRecord> = emptyList()
 
-    private fun loadSchoolList() {
+    init {
         viewModelScope.launch {
-            val schools = schoolRepository.getSchools()
-            view.state.update { it.copy(schoolList = schools) }
+            fetchSchools()
         }
     }
+
+    fun refresh() {
+        view.state.update { it.copy(refreshing = true) }
+        viewModelScope.launch {
+            fetchSchools()
+            view.state.update { it.copy(refreshing = false) }
+        }
+    }
+
+    fun loadMore() {
+        view.state.update { it.copy(loadMore = SchoolViewState.LoadMore.LOADING) }
+        viewModelScope.launch {
+            schoolRepository.getSchools(
+                offset = schools.size,
+            ).fold(
+                success = { result ->
+                    schools = schools.plus(result.data.schoolRecord)
+                    view.state.update { currentState ->
+                        currentState.copy(
+                            schools = schools,
+                            loadMore = handleLoadMore(schools.count() < result.data.total)
+                        )
+                    }
+                },
+                failure = {
+                    view.state.update { currentState -> currentState.copy(loadMore = SchoolViewState.LoadMore.LOAD_ERROR) }
+                }
+            )
+        }
+    }
+
+    private suspend fun fetchSchools() {
+        schoolRepository.getSchools().fold(
+            success = { result ->
+                view.state.update { currentState ->
+                    schools = result.data.schoolRecord
+                    if (schools.isEmpty()) {
+                        currentState.copy(
+                            state = State.EMPTY
+                        )
+                    } else {
+                        currentState.copy(
+                            state = State.SUCCESS,
+                            schools = schools,
+                            loadMore = handleLoadMore(schools.count() < result.data.total)
+                        )
+                    }
+                }
+            },
+            failure = {
+                view.state.update { currentState -> currentState.copy(state = State.ERROR) }
+            }
+        )
+    }
+
+    private fun handleLoadMore(hasMore: Boolean) = if (hasMore) SchoolViewState.LoadMore.LOAD_MORE else SchoolViewState.LoadMore.HIDE
+
 }

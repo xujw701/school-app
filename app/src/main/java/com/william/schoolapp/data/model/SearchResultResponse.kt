@@ -6,7 +6,7 @@ data class SearchResultResponse(
     @SerializedName("success")
     val success: Boolean,
     @SerializedName("result")
-    val result: SearchResult,
+    val data: SearchResult,
 )
 
 data class SearchResult(
@@ -16,4 +16,6 @@ data class SearchResult(
     val offset: Int,
     @SerializedName("records")
     val schoolRecord: List<SchoolRecord>,
+    @SerializedName("total")
+    val total: Int,
 )

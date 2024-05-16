@@ -16,11 +16,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,28 +31,77 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.william.schoolapp.R
 import com.william.schoolapp.data.model.SchoolRecord
+import com.william.schoolapp.ui.feature.school.SchoolViewState.State
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
 
-@ExperimentalMaterial3Api
 @Composable
-internal fun SchoolScreen() {
+fun SchoolScreenRoute(navController: NavHostController) {
     val viewModel = hiltViewModel<SchoolViewModel>()
     val viewState by rememberStateWithLifecycle(viewModel.viewState)
 
-    if (viewState.schoolList.isNotEmpty()) {
-        SchoolScreenContent(viewState.schoolList)
-    } else {
-        LoadingIndicator()
+    SchoolScreen(
+        viewState = viewState,
+        loadMore = viewModel::loadMore,
+        refresh = viewModel::refresh
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SchoolScreen(
+    viewState: SchoolViewState,
+    loadMore: () -> Unit,
+    refresh: () -> Unit) {
+    val pullRefreshState = rememberPullToRefreshState()
+
+    Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
+        Column(Modifier.fillMaxSize()) {
+            if (!pullRefreshState.isRefreshing) {
+                SchoolListView(
+                    viewState = viewState,
+                    loadMore = loadMore,
+                )
+            }
+        }
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter),
+            state = pullRefreshState,
+        )
     }
 }
 
 @Composable
-fun SchoolScreenContent(schools: List<SchoolRecord>) {
-    LazyColumn {
-        items(schools) { item ->
-            SchoolCard(school = item)
+fun SchoolListView(
+    viewState: SchoolViewState,
+    loadMore: () -> Unit,
+) {
+    when (viewState.state) {
+        State.LOADING -> {
+            LoadingIndicator()
+        }
+        State.ERROR -> {
+            Text(
+                text = "Error",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        State.EMPTY -> {
+            Text(
+                text = "No data",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        State.SUCCESS -> {
+            LazyColumn {
+                items(viewState.schools) { item ->
+                    SchoolCard(school = item)
+                }
+            }
         }
     }
 }
@@ -100,7 +152,16 @@ fun LoadingIndicator() {
     }
 }
 
-val sampleSchools = listOf(
+private fun getSchoolImage(schoolId: Int): Int {
+    return when (schoolId % 5) {
+        1 -> R.drawable.school1
+        2 -> R.drawable.school2
+        3 -> R.drawable.school3
+        else -> R.drawable.school4
+    }
+}
+
+private val mockSchools = listOf(
     SchoolRecord(
         1,
         "Sample School 1",
@@ -122,17 +183,12 @@ val sampleSchools = listOf(
     // Add more sample records if needed
 )
 
-private fun getSchoolImage(schoolId: Int): Int {
-    return when (schoolId % 5) {
-        1 -> R.drawable.school1
-        2 -> R.drawable.school2
-        3 -> R.drawable.school3
-        else -> R.drawable.school4
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewSchoolScreen() {
-    SchoolScreenContent(schools = sampleSchools)
+    val schoolViewState = SchoolViewState(
+        state = State.SUCCESS,
+        schools = mockSchools
+    )
+    SchoolScreen(schoolViewState, {}, {})
 }
