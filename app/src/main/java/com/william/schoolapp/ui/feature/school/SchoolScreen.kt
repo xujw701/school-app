@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +40,7 @@ import com.william.schoolapp.ui.theme.XSmallPadding
 import com.william.schoolapp.ui.theme.XXSmallPadding
 import com.william.schoolapp.ui.theme.schoolImageHeight
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
+import com.william.schoolapp.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -97,14 +99,14 @@ fun SchoolListView(
         }
         State.ERROR -> {
             Text(
-                text = "Error",
+                text = stringResource(id = R.string.error),
                 fontSize = LargeFontSize,
                 fontWeight = FontWeight.Bold
             )
         }
         State.EMPTY -> {
             Text(
-                text = "No data",
+                text = stringResource(id = R.string.no_data),
                 fontSize = LargeFontSize,
                 fontWeight = FontWeight.Bold
             )
@@ -138,7 +140,7 @@ fun SchoolListView(
                                 modifier = Modifier
                                     .padding(DefaultPadding)
                                     .fillMaxWidth(),
-                                text = "Failed to load more",
+                                text =  stringResource(id = R.string.failed_to_load_more),
                                 fontSize = LargeFontSize,
                                 fontWeight = FontWeight.Bold
                             )
