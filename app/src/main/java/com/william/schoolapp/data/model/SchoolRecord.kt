@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class SchoolRecord(
     @SerializedName("School_Id")
-    val schoolId: String,
+    val schoolId: Int,
     @SerializedName("Org_Name")
     val orgName: String,
     @SerializedName("Telephone")
