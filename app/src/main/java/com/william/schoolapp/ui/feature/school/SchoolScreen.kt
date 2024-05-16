@@ -27,13 +27,17 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.william.schoolapp.ui.feature.school.SchoolViewState.LoadMoreState
 import com.william.schoolapp.ui.feature.school.SchoolViewState.State
+import com.william.schoolapp.ui.shared.LoadingIndicator
+import com.william.schoolapp.ui.theme.DefaultPadding
+import com.william.schoolapp.ui.theme.LargeFontSize
+import com.william.schoolapp.ui.theme.XSmallPadding
+import com.william.schoolapp.ui.theme.XXSmallPadding
+import com.william.schoolapp.ui.theme.schoolImageHeight
 import com.william.schoolapp.ui.utils.rememberStateWithLifecycle
 import kotlinx.coroutines.delay
 
@@ -67,7 +71,7 @@ fun SchoolScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 16.dp)
+                .padding(vertical = DefaultPadding)
                 .background(Color.White)
         ) {
             SchoolListView(
@@ -94,14 +98,14 @@ fun SchoolListView(
         State.ERROR -> {
             Text(
                 text = "Error",
-                fontSize = 20.sp,
+                fontSize = LargeFontSize,
                 fontWeight = FontWeight.Bold
             )
         }
         State.EMPTY -> {
             Text(
                 text = "No data",
-                fontSize = 20.sp,
+                fontSize = LargeFontSize,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -123,7 +127,7 @@ fun SchoolListView(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(vertical = 16.dp),
+                                    .padding(vertical = DefaultPadding),
                                 contentAlignment = Alignment.Center
                             ) {
                                 CircularProgressIndicator()
@@ -132,10 +136,10 @@ fun SchoolListView(
                         LoadMoreState.LOAD_ERROR -> {
                             Text(
                                 modifier = Modifier
-                                    .padding(16.dp)
+                                    .padding(DefaultPadding)
                                     .fillMaxWidth(),
                                 text = "Failed to load more",
-                                fontSize = 20.sp,
+                                fontSize = LargeFontSize,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -152,51 +156,41 @@ fun SchoolCard(school: SchoolUio) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
+            .padding(XSmallPadding),
+        shape = RoundedCornerShape(XSmallPadding),
     ) {
         Column(
             modifier = Modifier
                 .background(Color.LightGray)
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(XSmallPadding),
         ) {
             AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp),
+                        .height(schoolImageHeight),
                 model = school.imageUrl,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(XSmallPadding))
             Text(
                 text = school.name,
-                fontSize = 20.sp,
+                fontSize = LargeFontSize,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(XXSmallPadding))
             Text(
                 text = school.address,
                 fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(XSmallPadding))
             Text(text = "Status: ${school.status}")
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(XXSmallPadding))
             Text(text = school.telephone)
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(XXSmallPadding))
             Text(text = school.email)
         }
-    }
-}
-
-@Composable
-fun LoadingIndicator() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator()
     }
 }
 
